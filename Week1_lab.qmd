@@ -1,0 +1,65 @@
+---
+title: "Week 1 - Lab"
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r}
+#loading libraries
+library(sf)
+library(stars)
+library(tmap)
+library(here)
+```
+
+```{r}
+#loading data
+ei_points <- sf::read_sf(here::here("data", "easter_island", "ei_points.gpkg"))
+volcanoes <- subset(ei_points, type == "volcano")
+ei_elev <- stars::read_stars(here::here("data", "easter_island", "ei_elev.tif"))
+ei_borders <- sf::read_sf(here::here("data", "easter_island", "ei_border.gpkg"))
+ei_roads <- sf::read_sf(here::here("data", "easter_island", "ei_roads.gpkg"))
+```
+
+```{r}
+#Create a map of Easter Island
+#Create a map of Easter Island and…
+#…denote the island’s borders and continuous elevation
+#…denote the island’s volcanoes and roads
+#…play with the color palette and essential map elements
+#Create an interactive map of Easter Island
+```
+
+```{r}
+tm_shape(ei_elev) + 
+  tm_raster()
+```
+```{r}
+#Creating an interactive map 
+tmap_mode("view")
+
+#Creating map of Easter Island
+tm_shape(ei_elev) + 
+  tm_raster(palette = c("darkolivegreen3", "darkgreen"),
+          title="Elevation (ASL)")+
+tm_shape(ei_borders) + 
+  tm_borders() + 
+ tm_shape(ei_roads) + 
+  tm_lines() +
+tm_shape(volcanoes) +
+  tm_dots(shape=2, 
+          size =0.03,
+          col="red",
+          legend.size.show = TRUE,
+          legend.col.show = TRUE)  +
+tm_scale_bar()+
+  tm_compass(position=c("right","top"))+
+tm_layout(bg.color="grey95",
+            main.title="Easter Island (Rapa Nui/Isla de Pascua)",
+            frame=FALSE)
+
+#tmap_save(map_eastern_island,here("tmap-example.png"))
+```
+
